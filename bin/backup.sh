@@ -46,7 +46,7 @@ for i in {1..5}; do
 	DBLIST=$(mysql -h$DBHOST -P$DBPORT -u$DBUSER -p$DBPASSWORD -e "SELECT schema_name from INFORMATION_SCHEMA.SCHEMATA WHERE schema_name NOT IN ('sys', 'information_schema', 'mysql', 'performance_schema')")
 	for dbname in $DBLIST; do
 		echo "Dumping database '$dbname'"
-		mysqldump --databases $dbname --add-drop-database --triggers --routines --events --set-gtid-purged=OFF -h$DBHOST -P$DBPORT -u$DBUSER -p$DBPASSWORD > /mysqldump/$dbname.sql || true  # Ignore failures
+		mysqldump --databases $dbname --add-drop-database --triggers --routines --events -h$DBHOST -P$DBPORT -u$DBUSER -p$DBPASSWORD > /mysqldump/$dbname.sql || true  # Ignore failures
 	done
 
 	echo "Sending database dumps to S3"
