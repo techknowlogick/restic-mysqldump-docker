@@ -2,6 +2,6 @@
 
 set -e
 
-dockerize -template /opt/restic-pg-dump/crontab.tmpl:/var/spool/cron/crontabs/root
+dockerize -template /opt/restic-mysqldump/crontab.tmpl:/var/spool/cron/crontabs/root
 
 crond -f -L /dev/stdout
