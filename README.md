@@ -1,6 +1,6 @@
-# restic-pg-dump
+# restic-mysqldump
 
-Docker image that runs `pg_dump` individually for every database on a given server and saves incremental encrypted backups via [restic].
+Docker image that runs `mysqldump` individually for every database on a given server and saves incremental encrypted backups via [restic].
 
 By default:
 
@@ -20,32 +20,32 @@ Run:
     -d \
     -e AWS_ACCESS_KEY_ID='...' \
     -e AWS_SECRET_ACCESS_KEY='...' \
-    -e PGHOST='...' \
-    -e PGPASSWORD='...' \
-    -e PGUSER='...' \
+    -e DBHOST='...' \
+    -e DBPASSWORD='...' \
+    -e DBUSER='...' \
     -e RESTIC_PASSWORD='...' \
     -e RESTIC_REPOSITORY='s3:s3.amazonaws.com/...' \
-    --name restic-pg-dump \
-    --restart always \
-    interaction/restic-pg-dump
+    --name restic-mysqldump \
+    --restart unless-stopped \
+    interaction/restic-mysqldump
 
 You can also pass the following environment variables to override the defaults:
 
     -e RESTIC_BACKUP_SCHEDULE='0 * * * *'  # Hourly
     -e RESTIC_PRUNE_SCHEDULE='0 14 * * 0'  # Sunday midnight, AEST. Use '' to disable.
-    -e PGPORT='5432'
+    -e DBPORT='5432'
     -e RESTIC_KEEP_HOURLY='24'
     -e RESTIC_KEEP_DAILY='7'
     -e RESTIC_KEEP_WEEKLY='4'
     -e RESTIC_KEEP_MONTHLY='12'
 
-You can backup 5 different database clusters with `PG*_[1..5]`, and assign an arbitrary hostname with `HOSTNAME_[1..5]` (if `PGHOST` is not a fully qualified domain name) environment variables.
+You can backup 5 different database clusters with `DB*_[1..5]`, and assign an arbitrary hostname with `HOSTNAME_[1..5]` (if `DBHOST` is not a fully qualified domain name) environment variables.
 
     -e HOSTNAME_2='...'
-    -e PGHOST_2='...'
-    -e PGPASSWORD_2='...'
-    -e PGPORT_2='5432'
-    -e PGUSER_2='...'
+    -e DBHOST_2='...'
+    -e DBPASSWORD_2='...'
+    -e DBPORT_2='5432'
+    -e DBUSER_2='...'
 
 A `docker-compose.yml` file is provided for convenience.
 
@@ -54,7 +54,7 @@ A `docker-compose.yml` file is provided for convenience.
 
 Create a `.envrc` file from `.envrc.example` and update with your AWS, PostgreSQL and Restic credentials.
 
-    $ wget https://raw.githubusercontent.com/ixc/restic-pg-dump/master/.envrc.example -O .envrc
+    $ wget https://raw.githubusercontent.com/techknowlogick/restic-mysqldump/master/.envrc.example -O .envrc
 
 Restrict access to `.envrc`, because it contains AWS and restic credentials:
 
@@ -89,7 +89,6 @@ Mount the restic repository via fuse (read-only):
 Then, access the latest snapshot from another terminal:
 
     $ ls -l "mnt/hosts/{HOSTNAME}/latest"
-    $ psql -f "mnt/hosts/{HOSTNAME}/latest/pg_dump/{DBNAME}.sql" {DBNAME}
 
 **WARNING:** Mounting the restic repository via fuse will open an exclusive lock and prevent all scheduled backups until the lock is released.
 
@@ -97,3 +96,7 @@ Then, access the latest snapshot from another terminal:
 [direnv]: https://direnv.net/
 [Homebrew]: https://brew.sh/
 [restic]: https://restic.net/
+
+# Credit
+
+This repo is forked from https://github.com/ixc/restic-pg-dump-docker which is a restic backup container for postgres.
