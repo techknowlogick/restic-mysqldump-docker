@@ -7,15 +7,15 @@ services:
       AWS_SECRET_ACCESS_KEY:
       # BACKUP_SCHEDULE: '0 * * * *'  # Hourly
       # PRUNE_SCHEDULE: '0 14 * * 0'  # Sunday midnight, AEST. Use '' to disable.
-      PGHOST:
-      PGPASSWORD:
-      # PGPORT: 5432
-      PGUSER:
+      DBHOST:
+      DBPASSWORD:
+      # DBPORT: 3306
+      DBUSER:
       # RESTIC_KEEP_HOURLY: 24
       # RESTIC_KEEP_DAILY: 7
       # RESTIC_KEEP_WEEKLY: 4
       # RESTIC_KEEP_MONTHLY: 12
       RESTIC_PASSWORD:
       RESTIC_REPOSITORY:
-    image: interaction/restic-pg-dump
-    restart: always
+    image: techknowlogick/restic-mysqldump
+    restart: unless-stopped
